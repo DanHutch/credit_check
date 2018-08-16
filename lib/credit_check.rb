@@ -1,45 +1,70 @@
 card_number = "5541808923795240"
 
-# Your Luhn Algorithm Here
+require 'pry'
 
-card_integers =  []
+class CreditCard(card_number, credit_limit)
 
-card_number.chars.each do |x|
-  card_integers << x.to_i
 end
 
-doubles = []
+def credit_validation(card_number)
+  integers        = get_integers(card_number)
 
-card_integers.each_with_index do |integer, index|
+  doubled_digits  = double_integers(integers)
 
-  if index == 0
-    doubles << integer * 2
-  elsif index % 2 == 0
-    doubles << integer * 2
-  else
-    doubles << integer
+  new_digits      = add_digits(doubled_digits)
+
+  final_sum       = find_final_sum(new_digits)
+
+  display_validity(final_sum, card_number)
+end
+
+def get_integers(card_input)
+  card_integers =  []
+
+  card_input.chars.each do |x|
+    card_integers << x.to_i
   end
-
+  card_integers
 end
 
-new_numbers = []
+def double_integers(integers)
+  doubles = []
 
-doubles.each do |double|
-  if double > 9
-    new_numbers << double - 9
+  integers.each_with_index do |integer, index|
+
+    if index.even?
+      doubles << integer * 2
+    else
+      doubles << integer
+    end
+  end
+  doubles
+end
+
+def add_digits(doubles)
+  new_numbers = []
+
+  doubles.each do |double|
+    if double > 9
+      new_numbers << double - 9
+    else
+      new_numbers << double
+    end
+  end
+  new_numbers
+end
+
+def find_final_sum(new_numbers)
+  final_sum = new_numbers.sum
+  final_sum
+end
+
+def display_validity(final_sum, card_num)
+  if final_sum % 10 == 0
+    puts "The card number, #{card_num}, is VALID."
   else
-    new_numbers << double
+    puts "The card number, #{card_num}, is INVALID."
   end
 end
 
-final_sum = new_numbers.sum
-
-# Output
-## If it is valid, print "The number [card number] is valid!"
-## If it is invalid, print "The number [card number] is invalid!"
-
-if final_sum % 10 == 0
-  puts "This card number is VALID."
-else
-  puts "This card number is INVALID"
-end
+credit_validation(card_number)
